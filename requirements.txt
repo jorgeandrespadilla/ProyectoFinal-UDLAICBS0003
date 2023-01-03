@@ -1,0 +1,17 @@
+# Main dependencies
+Faker==15.3.4
+jproperties==2.1.1
+numpy==1.24.1
+pandas==1.5.2
+PyMySQL==1.0.2
+SQLAlchemy==1.4.45
+
+# Secondary dependencies
+autopep8==2.0.1
+cffi==1.15.1
+cryptography==39.0.0
+greenlet==2.0.1
+pycparser==2.21
+python-dateutil==2.8.2
+pytz==2022.7
+six==1.16.0
