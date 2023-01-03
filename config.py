@@ -1,5 +1,6 @@
 import os
 from jproperties import Properties
+from data.entity_constants import total_provincias, total_motivos, total_servicios
 
 
 def read_config(file_path: str) -> dict:
@@ -63,9 +64,9 @@ class DbConfig:
 class DataConfig:
     # Number of records to generate
     class Records:
-        PROVINCIAS = 24
-        SERVICIOS = 4
-        MOTIVOS = 6
+        PROVINCIAS = total_provincias
+        SERVICIOS = total_servicios
+        MOTIVOS = total_motivos
         CLIENTES = 82
         ORDENES = 1000
 
