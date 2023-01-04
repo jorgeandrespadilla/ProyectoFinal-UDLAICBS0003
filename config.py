@@ -36,15 +36,15 @@ class DbConfig:
         SOR = db_config['DB_SOR_SCHEMA']
         STG = db_config['DB_STG_SCHEMA']
 
-    # Staging database tables
+    # Extraction tables (staging)
     class ExtractTable:
-        PROVINCIAS = 'provincias_stg'
-        SERVICIOS = 'servicios_stg'
-        MOTIVOS = 'motivos_stg'
-        CLIENTES = 'clientes_stg'
-        ORDENES = 'ordenes_stg'
+        PROVINCIAS = 'provincias_ext'
+        SERVICIOS = 'servicios_ext'
+        MOTIVOS = 'motivos_ext'
+        CLIENTES = 'clientes_ext'
+        ORDENES = 'ordenes_ext'
 
-    # Transformation database tables
+    # Transformation tables (staging)
     class TransformTable:
         PROVINCIAS = 'provincias_tra'
         SERVICIOS = 'servicios_tra'
@@ -52,8 +52,8 @@ class DbConfig:
         CLIENTES = 'clientes_tra'
         ORDENES = 'ordenes_tra'
 
-    # Final database tables
-    class LoadTable:
+    # Final tables (SOR)
+    class SorTable:
         PROVINCIAS = 'provincias'
         SERVICIOS = 'servicios'
         MOTIVOS = 'motivos'
