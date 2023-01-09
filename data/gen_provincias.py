@@ -1,15 +1,18 @@
 import pandas as pd
-from config import DataConfig
-from data.entity_constants import provincias_name
-from data.entity_code import provincia_code
-from util.data_faker import add_record, generate_csv
+from sqlalchemy.engine import Engine
+from config import DataConfig, SourceDbConfig
+from constants.entities import provincias_name
+from data.entity_id import provincia_id, records_exist
+from util.data_faker import add_record
 
 
-def generate_provincias():
+def generate_provincias(db_con: Engine):
     provincias = pd.DataFrame()
+    if records_exist(provincia_id(db_con)):
+        print("Provincias already available")
+        return
     for i in range(DataConfig.Records.PROVINCIAS):
         provincias = add_record(provincias, {
-            'codigo_provincia': provincia_code(i+1),
             'nombre_provincia': provincias_name[i],
         })
-    generate_csv(provincias, DataConfig.Csv.PROVINCIAS)
+    provincias.to_sql(SourceDbConfig.Table.PROVINCIAS, db_con, if_exists='append', index=False)

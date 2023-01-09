@@ -1,8 +1,15 @@
 import traceback
 from data import generate_data
+from util.sql_helpers import SchemaConnection, connection_handler
 
-try:
-    generate_data()
-except:
-    print("An error occurred while generating the data:")
-    traceback.print_exc()
+
+@connection_handler
+def main(schema_con: SchemaConnection):
+    generate_data(schema_con.SOURCE)
+
+if __name__ == "__main__":
+    try:
+        main()
+    except:
+        print("An error occurred while running the ETL process:")
+        traceback.print_exc()

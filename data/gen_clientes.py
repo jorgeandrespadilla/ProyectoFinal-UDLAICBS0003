@@ -1,20 +1,22 @@
 import pandas as pd
-from config import DataConfig
-from data.entity_code import cliente_code, provincia_code
-from util.data_faker import add_record, generate_csv, generate_fullname, random_choice, normalize_str, fake
+from sqlalchemy.engine import Engine
+from config import DataConfig, SourceDbConfig
+from .entity_id import provincia_id, rand_provincia
+from util.data_faker import add_record, generate_fullname, random_choice, normalize_str, fake
 
 
-def generate_clientes():
+
+def generate_clientes(db_con: Engine):
     clientes = pd.DataFrame()
-    for i in range(DataConfig.Records.CLIENTES):
+    max_provincia_id = provincia_id(db_con)
+    for _ in range(DataConfig.Records.CLIENTES):
         tipo = random_choice({
             'NATURAL': 8,
             'EMPRESA': 2
         })
         clientes = add_record(clientes, {
-            'codigo_cliente': cliente_code(i+1),
-            'codigo_provincia': provincia_code(),
+            'id_provincia': rand_provincia(max_provincia_id),
             'nombre_cliente': generate_fullname() if tipo == 'NATURAL' else normalize_str(fake.company()),
             'tipo_cliente': tipo
         })
-    generate_csv(clientes, DataConfig.Csv.CLIENTES)
+    clientes.to_sql(SourceDbConfig.Table.CLIENTES, db_con, if_exists='append', index=False)

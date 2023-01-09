@@ -56,7 +56,7 @@ def connection_handler(func):
             traceback.print_exc()
     return wrapper
 
-def get_next_identity(
+def get_current_identity(
     table_name: str,
     con: Engine,
     id_column: str = 'ID',
@@ -69,8 +69,8 @@ def get_next_identity(
     )
     id_value = df['NEXT_ID'].values[0]
     if id_value is None:
-        return 1
-    return int(id_value) + 1
+        return 0
+    return int(id_value)
 
 def create_etl_process(db_con: Engine) -> int:
     """Creates an ETL process record in the database and returns its ID."""
