@@ -4,38 +4,41 @@ from typing import List, Tuple
 from sqlalchemy.engine import Engine
 import pandas as pd
 from util.db_connection import DbConnection
-from config import DbConfig
+from config import DbConnectionConfig, EtlDbConfig, SourceDbConfig
 
 
 class SchemaConnection:
+    SOURCE: Engine
     STG: Engine
     SOR: Engine
 
     def __init__(self):
-        self.STG = self.__configure_connection(DbConfig.Schema.STG)
-        self.SOR = self.__configure_connection(DbConfig.Schema.SOR)
+        self.SOURCE = self.__configure_connection(SourceDbConfig.Connection, SourceDbConfig.DATABASE_SCHEMA)
+        self.STG = self.__configure_connection(EtlDbConfig.Connection, EtlDbConfig.Schema.STG)
+        self.SOR = self.__configure_connection(EtlDbConfig.Connection, EtlDbConfig.Schema.SOR)
 
     def begin(self):
+        self.SOURCE.begin()
         self.STG.begin()
         self.SOR.begin()
 
     def dispose(self):
+        self.SOURCE.dispose()
         self.STG.dispose()
         self.SOR.dispose()
 
-    def __configure_connection(self, schema: str) -> Engine:
-        db_type = 'mysql'
+    def __configure_connection(self, con: DbConnectionConfig, schema: str) -> Engine:
         con_db = DbConnection(
-            type=db_type,
-            host=DbConfig.HOST,
-            port=DbConfig.PORT,
-            user=DbConfig.USER,
-            password=DbConfig.PASSWORD,
+            type=con.NAME,
+            host=con.HOST,
+            port=con.PORT,
+            user=con.USER,
+            password=con.PASSWORD,
             database=schema
         )
         ses_db = con_db.start()
         if ses_db == -1:
-            raise Exception(f"The give database type '{db_type}' is not valid")
+            raise Exception(f"The give database type '{con.NAME}' is not valid")
         elif ses_db == -2:
             raise Exception(f"Error trying connect to the database '{schema}'")
         return ses_db
@@ -53,6 +56,21 @@ def connection_handler(func):
             traceback.print_exc()
     return wrapper
 
+def get_next_identity(
+    table_name: str,
+    con: Engine,
+    id_column: str = 'ID',
+) -> int:
+    """Gets the next identity value for the specified table."""
+    # Use pandas
+    df = pd.read_sql_query(
+        sql=f'SELECT MAX({id_column}) AS NEXT_ID FROM {table_name}',
+        con=con
+    )
+    id_value = df['NEXT_ID'].values[0]
+    if id_value is None:
+        return 1
+    return int(id_value) + 1
 
 def create_etl_process(db_con: Engine) -> int:
     """Creates an ETL process record in the database and returns its ID."""
