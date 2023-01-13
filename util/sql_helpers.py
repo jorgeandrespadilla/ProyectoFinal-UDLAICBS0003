@@ -83,7 +83,7 @@ def read_table(
     columns: List[str],
     con: Engine,
     with_process_id: int = None,
-    etl_process_column: str = 'ETL_PROC_ID',
+    etl_process_column: str = EtlDbConfig.ETL_PROCESS_COL,
 ):
     """
     Reads a table from the database and returns a dataframe with the specified columns.

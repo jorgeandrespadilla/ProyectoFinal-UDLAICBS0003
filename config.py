@@ -94,6 +94,7 @@ class EtlDbConfig:
         PREMIOS = 'premios'
 
     ETL_PROCESS_TABLE = 'procesos_etl'
+    ETL_PROCESS_COL = 'ETL_PROC_ID'
 
 
 # Data generation configuration
