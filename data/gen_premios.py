@@ -11,7 +11,7 @@ def generate_premios(db_con: Engine):
     premios = pd.DataFrame()
     max_cliente_id = cliente_id(db_con)
     existing_clientes = [None] # Already existing id_cliente
-    for _ in range(DataConfig.Records.PREMIOS):
+    for i in range(DataConfig.Records.PREMIOS):
         # Choose random list element
         data = random.choice(premios_data)
         cl_id = None
@@ -24,9 +24,10 @@ def generate_premios(db_con: Engine):
             'N': 1
         })
         premios = add_record(premios, {
-            'id_cliente': cl_id,
-            'descripcion_premio': data.description,
-            'valor_premio': data.cost,
-            'canjeado': canjeado
+            'ID_PREMIO': i + 1,
+            'ID_CLIENTE': cl_id,
+            'DESCRIPCION_PREMIO': data.description,
+            'VALOR_PREMIO': data.cost,
+            'CANJEADO': canjeado
         })
     generate_csv(premios, DataConfig.Csv.PREMIOS)
