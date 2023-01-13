@@ -74,8 +74,7 @@ def get_current_identity(
 
 def create_etl_process(db_con: Engine) -> int:
     """Creates an ETL process record in the database and returns its ID."""
-    etl_process_id = db_con.execute(
-        'INSERT INTO etl_processes VALUES ()').lastrowid
+    etl_process_id = db_con.execute(f"INSERT INTO {EtlDbConfig.ETL_PROCESS_TABLE} VALUES ()").lastrowid
     return int(etl_process_id)
 
 

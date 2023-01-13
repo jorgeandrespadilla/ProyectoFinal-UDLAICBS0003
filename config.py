@@ -93,6 +93,8 @@ class EtlDbConfig:
         ORDENES = 'ordenes'
         PREMIOS = 'premios'
 
+    ETL_PROCESS_TABLE = 'procesos_etl'
+
 
 # Data generation configuration
 class DataConfig:
