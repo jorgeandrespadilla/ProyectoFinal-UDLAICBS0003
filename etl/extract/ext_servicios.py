@@ -1,25 +1,27 @@
-import pandas as pd
-from sqlalchemy.engine import Engine
-from config import DataConfig, DbConfig
+from config import EtlDbConfig, SourceDbConfig
+from util.sql_helpers import SchemaConnection, read_table
 
-# csv_col_name: db_col_name
+# source_col_name: db_col_name
 columns_map = {
-    'codigo_servicio': 'codigo_servicio',
-    'descripcion_servicio': 'descripcion_servicio',
-    'valor_servicio': 'valor_servicio',
-    'tiempo_subscripcion': 'tiempo_subscripcion',
-    'beneficios_servicio': 'beneficios_servicio',
+    'ID_SERVICIO': 'id_servicio',
+    'DESCRIPCION_SERVICIO': 'descripcion_servicio',
+    'VALOR_SERVICIO': 'valor_servicio',
+    'TIEMPO_SUBSCRIPCION': 'tiempo_subscripcion',
+    'BENEFICIOS_SERVICIO': 'beneficios_servicio',
 }
+source_columns = list(columns_map.keys())
 
 
-def extract_servicios(db_con: Engine):
-    # Read CSV
-    servicios_csv = pd.read_csv(DataConfig.Csv.SERVICIOS, dtype=str)
-    if not servicios_csv.empty:
+def extract_servicios(schema_con: SchemaConnection):
+    # Read source table
+    servicios_source = read_table(
+        table_name=SourceDbConfig.Table.SERVICIOS,
+        columns=source_columns,
+        con=schema_con.SOURCE,
+    ).astype(str)
+    if not servicios_source.empty:
         # Assign database column names
-        servicios_df = servicios_csv.rename(columns=columns_map)
+        servicios_df = servicios_source.rename(columns=columns_map)
         # Write to database
-        db_con.connect().execute(
-            f'TRUNCATE TABLE {DbConfig.ExtractTable.SERVICIOS}')
-        servicios_df.to_sql(DbConfig.ExtractTable.SERVICIOS,
-                            db_con, if_exists='append', index=False)
+        schema_con.STG.connect().execute(f'TRUNCATE TABLE {EtlDbConfig.ExtractTable.SERVICIOS}')
+        servicios_df.to_sql(EtlDbConfig.ExtractTable.SERVICIOS, schema_con.STG, if_exists='append', index=False)

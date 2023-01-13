@@ -1,22 +1,24 @@
-import pandas as pd
-from sqlalchemy.engine import Engine
-from config import DataConfig, DbConfig
+from config import EtlDbConfig, SourceDbConfig
+from util.sql_helpers import read_table, SchemaConnection
 
-# csv_col_name: db_col_name
+# source_col_name: db_col_name
 columns_map = {
-    'codigo_motivo': 'codigo_motivo',
-    'descripcion_motivo': 'descripcion_motivo',
+    'ID_MOTIVO': 'id_motivo',
+    'DESCRIPCION_MOTIVO': 'descripcion_motivo',
 }
+source_columns = list(columns_map.keys())
 
 
-def extract_motivos(db_con: Engine):
-    # Read CSV
-    motivos_csv = pd.read_csv(DataConfig.Csv.MOTIVOS, dtype=str)
-    if not motivos_csv.empty:
+def extract_motivos(schema_con: SchemaConnection):
+    # Read source table
+    motivos_source = read_table(
+        table_name=SourceDbConfig.Table.MOTIVOS,
+        columns=source_columns,
+        con=schema_con.SOURCE,
+    ).astype(str)
+    if not motivos_source.empty:
         # Assign database column names
-        motivos_df = motivos_csv.rename(columns=columns_map)
+        motivos_df = motivos_source.rename(columns=columns_map)
         # Write to database
-        db_con.connect().execute(
-            f'TRUNCATE TABLE {DbConfig.ExtractTable.MOTIVOS}')
-        motivos_df.to_sql(DbConfig.ExtractTable.MOTIVOS,
-                           db_con, if_exists='append', index=False)
+        schema_con.STG.connect().execute(f'TRUNCATE TABLE {EtlDbConfig.ExtractTable.MOTIVOS}')
+        motivos_df.to_sql(EtlDbConfig.ExtractTable.MOTIVOS, schema_con.STG, if_exists='append', index=False)

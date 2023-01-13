@@ -1,24 +1,26 @@
-import pandas as pd
-from sqlalchemy.engine import Engine
-from config import DataConfig, DbConfig
+from config import EtlDbConfig, SourceDbConfig
+from util.sql_helpers import SchemaConnection, read_table
 
-# csv_col_name: db_col_name
+# source_col_name: db_col_name
 columns_map = {
-    'codigo_cliente': 'codigo_cliente',
-    'codigo_provincia': 'codigo_provincia',
-    'nombre_cliente': 'nombre_cliente',
-    'tipo_cliente': 'tipo_cliente',
+    'ID_CLIENTE': 'id_cliente',
+    'ID_PROVINCIA': 'id_provincia',
+    'NOMBRE_CLIENTE': 'nombre_cliente',
+    'TIPO_CLIENTE': 'tipo_cliente',
 }
+source_columns = list(columns_map.keys())
 
 
-def extract_clientes(db_con: Engine):
-    # Read CSV
-    clientes_csv = pd.read_csv(DataConfig.Csv.CLIENTES, dtype=str)
-    if not clientes_csv.empty:
+def extract_clientes(schema_con: SchemaConnection):
+    # Read source table
+    clientes_source = read_table(
+        table_name=SourceDbConfig.Table.CLIENTES,
+        columns=source_columns,
+        con=schema_con.SOURCE,
+    ).astype(str)
+    if not clientes_source.empty:
         # Assign database column names
-        clientes_df = clientes_csv.rename(columns=columns_map)
+        clientes_df = clientes_source.rename(columns=columns_map)
         # Write to database
-        db_con.connect().execute(
-            f'TRUNCATE TABLE {DbConfig.ExtractTable.CLIENTES}')
-        clientes_df.to_sql(DbConfig.ExtractTable.CLIENTES,
-                           db_con, if_exists='append', index=False)
+        schema_con.STG.connect().execute(f'TRUNCATE TABLE {EtlDbConfig.ExtractTable.CLIENTES}')
+        clientes_df.to_sql(EtlDbConfig.ExtractTable.CLIENTES, schema_con.STG, if_exists='append', index=False)
