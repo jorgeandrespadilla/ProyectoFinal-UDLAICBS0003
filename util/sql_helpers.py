@@ -1,6 +1,6 @@
 import functools
 import traceback
-from typing import List, Tuple
+from typing import List, NamedTuple
 from sqlalchemy.engine import Engine
 import pandas as pd
 from util.db_connection import DbConnection
@@ -102,12 +102,16 @@ def read_table(
         )
     return df
 
+Relationship = NamedTuple('Relationship', [
+    ('destination_column', str),
+    ('source_table', str),
+    ('source_column', str)
+])
 
 def map_relationships(
     df: pd.DataFrame,
     con: Engine,
-    # destination_column, source_table, source_column
-    relationships: List[Tuple[str, str, str]],
+    relationships: List[Relationship],
     id_column: str = "ID",
 ) -> None:
     """Creates a new dataframe including the relations between the tables using their IDs."""
@@ -129,7 +133,6 @@ def merge_and_insert(
     source_df: pd.DataFrame,
     target_table: str,
     target_df: pd.DataFrame,
-    # The columns that will be used to merge the dataframes
     key_columns: List[str],
     db_con: Engine,
     id_column: str = "ID",
@@ -138,6 +141,21 @@ def merge_and_insert(
     Merges two dataframes and inserts the new records into the target table.
     If the data already exists, it will be updated.
     Otherwise, it will be inserted.
+
+    Parameters
+    ----------
+    source_df : pd.DataFrame
+        The source dataframe.
+    target_table : str
+        The target table name.
+    target_df : pd.DataFrame
+        The target dataframe.
+    key_columns : List[str]
+        The columns that will be used to merge the dataframes.
+    db_con : Engine
+        The database connection.
+    id_column : str, optional
+        The ID column name, by default "ID"
     """
     # Remove the ID column from the target dataframe
     target_df_without_id = target_df.drop(columns=[id_column])
