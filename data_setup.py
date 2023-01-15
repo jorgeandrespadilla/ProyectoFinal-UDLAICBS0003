@@ -11,5 +11,5 @@ if __name__ == "__main__":
     try:
         main()
     except:
-        print("An error occurred while running the ETL process:")
+        print("An error occurred while generating data:")
         traceback.print_exc()
