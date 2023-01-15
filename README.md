@@ -37,11 +37,12 @@ Modificar los archivos de configuración `etl_db.properties` y `source_db.proper
 ## Ejecución de scripts SQL
 
 Los scripts SQL se encuentran ubicados en el directorio `sql`, y se deben ejecutar en una base de datos MySQL en el siguiente orden:
-1. `initialization.sql` (inicialización de esquemas)
+1. `source-initialization.sql` (inicialización de esquemas de la base de datos fuente)
 2. `source-tables.sql` (creación de tablas de la base fuente)
-3. `ext-tables.sql` (creación de tablas de extracción)
-4. `tra-tables.sql` (creación de tablas de transformación)
-5. `sor-tables.sql` (creación de tablas de la base SOR)
+3. `etl-initialization.sql` (inicialización de esquemas de la base de datos de ETL)
+4. `ext-tables.sql` (creación de tablas de extracción)
+5. `tra-tables.sql` (creación de tablas de transformación)
+6. `sor-tables.sql` (creación de tablas de la base SOR)
 
 ## Generación de datos	
 
