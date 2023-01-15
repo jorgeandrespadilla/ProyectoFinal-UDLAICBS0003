@@ -3,6 +3,7 @@ from sqlalchemy.engine import Engine
 from config import DataConfig, SourceDbConfig
 from data.entity_id import cliente_id, motivo_id, provincia_id, rand_cliente, rand_motivo, rand_provincia, rand_servicio, servicio_id
 from util.data_faker import add_record, generate_date, random_choice
+from constants.entities import provincias_weight, servicios_weight
 
 
 def generate_ordenes(db_con: Engine):
@@ -22,8 +23,8 @@ def generate_ordenes(db_con: Engine):
         }
         ordenes = add_record(ordenes, {
             'id_cliente': rand_cliente(max_cliente_id),
-            'id_servicio': rand_servicio(max_servicio_id),
-            'id_provincia': rand_provincia(max_provincia_id),
+            'id_servicio': rand_servicio(max_servicio_id, weights=servicios_weight),
+            'id_provincia': rand_provincia(max_provincia_id, weights=provincias_weight),
             'id_motivo': codigo_motivo_by_estado[estado],
             'estado_orden': estado,
             'fecha_adquisicion': generate_date('2021-01-01', '2022-11-30')

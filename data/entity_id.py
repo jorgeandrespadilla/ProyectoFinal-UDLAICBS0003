@@ -25,14 +25,19 @@ def servicio_id(con: Engine):
 
 # Generate a random ID for a given entity
 
-def rand_provincia(end: int):
-    return random.randint(1, end)
+def rand_with_weights(end: int, weights: list = None):
+    value_weights = weights or [1] * end
+    value_weights = value_weights[:end]
+    return random.choices(range(1, end + 1), weights=value_weights)[0]
+
+def rand_provincia(end: int, weights: list = None):
+    return rand_with_weights(end, weights)
 
 def rand_motivo(start: int = 1, end: int = 1):
     return random.randint(start, end)
 
-def rand_servicio(end: int):
-    return random.randint(1, end)
+def rand_servicio(end: int, weights: list = None):
+    return rand_with_weights(end, weights)
 
 def rand_cliente(end: int):
     return random.randint(1, end)
