@@ -24,11 +24,16 @@ El proyecto está estructurado de la siguiente manera:
   - `transform`: directorio que contiene los scripts de transformación de datos.
   - `load`: directorio que contiene los scripts de carga de datos.
 - `sql`: directorio que contiene los scripts SQL para la creación de tablas de la base de datos.
+  - `etl`: directorio que contiene los scripts SQL para la creación de tablas de la base de datos de ETL.
+  - `source`: directorio que contiene los scripts SQL para la creación de tablas de la base de datos fuente.
 - `util`: directorio que contiene los archivos de utilidades de la aplicación.
+- `config.py`: archivo de configuración de la aplicación.
+- `data_setup.py`: archivo que genera los datos aleatorios.
+- `etl_process.py`: archivo que ejecuta el proceso de ETL.
 
 ## Instalación de paquetes
 
-Para instalar los paquetes necesarios usados por Python, se debe ejecutar el comando `pip install -r requirements.txt`
+Para instalar los paquetes necesarios usados por Python, se debe ejecutar el comando `pip install -r requirements.txt`.
 
 ## Configuración de la base de datos
 
@@ -36,13 +41,17 @@ Modificar los archivos de configuración `etl_db.properties` y `source_db.proper
 
 ## Ejecución de scripts SQL
 
-Los scripts SQL se encuentran ubicados en el directorio `sql`, y se deben ejecutar en una base de datos MySQL en el siguiente orden:
-1. `source-initialization.sql` (inicialización de esquemas de la base de datos fuente)
-2. `source-tables.sql` (creación de tablas de la base fuente)
-3. `etl-initialization.sql` (inicialización de esquemas de la base de datos de ETL)
-4. `ext-tables.sql` (creación de tablas de extracción)
-5. `tra-tables.sql` (creación de tablas de transformación)
-6. `sor-tables.sql` (creación de tablas de la base SOR)
+Los scripts SQL del proyecto se encuentran ubicados en el directorio `sql`.
+
+Para la base de datos fuente, los script SQL se encuentran en el directorio `sql/source` y se deben ejecutar en el siguiente orden:
+1. `1_source-initialization.sql` (inicialización de esquemas de la base de datos fuente)
+2. `2_source-tables.sql` (creación de tablas de la base fuente)
+  
+Para la base de datos de ETL, los script SQL se encuentran en el directorio `sql/etl` y se deben ejecutar en el siguiente orden:
+1. `1_etl-initialization.sql` (inicialización de esquemas de la base de datos de ETL)
+2. `2_ext-tables.sql` (creación de tablas de extracción)
+3. `3_tra-tables.sql` (creación de tablas de transformación)
+4. `4_sor-tables.sql` (creación de tablas de la base SOR)
 
 ## Generación de datos	
 
