@@ -8,7 +8,15 @@
 
 ## Descripción
 
-Este repositorio contiene el código fuente usado para el proyecto final de Visualización de Datos. Para ello, se utilizó Python 3.10 y MySQL 8.0 para el almacenamiento de datos.
+Este repositorio contiene el código fuente usado para el proyecto final de Visualización de Datos. Para ello, se utilizó Python 3.10 y MySQL 8.0 para el almacenamiento de datos. La generación de datos aleatorios se llevó a cabo con la librería Faker y para la visualización de datos se utilizó Power BI.
+
+El proyecto propuesto solventa las necesidades analíticas de la compañía Tracklink.ec. Para ello, se desea saber la efectividad de su nuevo aplicativo TrackltApp para captar nuevos clientes y determinar los puntos de mejora en base a las interacciones de los usuarios. Esta solución implementa un proceso ETL vinculado a una base de datos MySQL y permite visualizar los resultados en Power BI.
+
+En este proyecto, se busca resolver las siguientes necesidades analíticas del negocio:
+1. Cantidad de ventas concretadas dentro del aplicativo móvil en base a un rango mensual variable.
+2. Principales motivos por los que las ventas no se han concretado.
+3. Principales regiones de clientes que utilizan la aplicación.
+4. Servicios más exitosos a nivel comercial dentro de la aplicación.
 
 ## Estructura del proyecto
 
@@ -23,40 +31,22 @@ El proyecto está estructurado de la siguiente manera:
   - `extract`: directorio que contiene los scripts de extracción de datos.
   - `transform`: directorio que contiene los scripts de transformación de datos.
   - `load`: directorio que contiene los scripts de carga de datos.
+- `docs`: directorio que contiene los manuales del proyecto.
+  - `manual_instalacion.pdf`: manual de instalación de las herramientas necesarias para el proyecto.
+  - `manual_ejecucion.pdf`: manual de ejecución del proyecto.
 - `sql`: directorio que contiene los scripts SQL para la creación de tablas de la base de datos.
   - `etl`: directorio que contiene los scripts SQL para la creación de tablas de la base de datos de ETL.
   - `source`: directorio que contiene los scripts SQL para la creación de tablas de la base de datos fuente.
 - `util`: directorio que contiene los archivos de utilidades de la aplicación.
+- `visualization`: directorio que contiene el archivo de visualización de datos en Power BI.
 - `config.py`: archivo de configuración de la aplicación.
 - `data_setup.py`: archivo que genera los datos aleatorios.
 - `etl_process.py`: archivo que ejecuta el proceso de ETL.
 
-## Instalación de paquetes
+## Instalación
 
-Para instalar los paquetes necesarios usados por Python, se debe ejecutar el comando `pip install -r requirements.txt`.
+Para la instalación de las herramientas necesarias para el proyecto, se debe seguir el manual de instalación disponible en el directorio `docs`.
 
-## Configuración de la base de datos
+## Ejecución
 
-Modificar los archivos de configuración `etl_db.properties` y `source_db.properties` en el directorio `config` con las configuraciones de conexión a la base de datos correspondientes.
-
-## Ejecución de scripts SQL
-
-Los scripts SQL del proyecto se encuentran ubicados en el directorio `sql`.
-
-Para la base de datos fuente, los script SQL se encuentran en el directorio `sql/source` y se deben ejecutar en el siguiente orden:
-1. `1_source-initialization.sql` (inicialización de esquemas de la base de datos fuente)
-2. `2_source-tables.sql` (creación de tablas de la base fuente)
-  
-Para la base de datos de ETL, los script SQL se encuentran en el directorio `sql/etl` y se deben ejecutar en el siguiente orden:
-1. `1_etl-initialization.sql` (inicialización de esquemas de la base de datos de ETL)
-2. `2_ext-tables.sql` (creación de tablas de extracción)
-3. `3_tra-tables.sql` (creación de tablas de transformación)
-4. `4_sor-tables.sql` (creación de tablas de la base SOR)
-
-## Generación de datos	
-
-Para generar los datos, se debe ejecutar el comando `python data_setup.py` en la raíz del proyecto. Este comando genera los archivos CSV en el directorio `data/csv`.
-
-## Ejecución de ETL
-
-Para ejecutar el ETL, se debe ejecutar el comando `python etl_process.py` en la raíz del proyecto.
+Para la ejecución del proyecto, se debe seguir el manual de ejecución disponible en el directorio `docs`.
